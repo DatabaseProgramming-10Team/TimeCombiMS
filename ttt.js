@@ -23,3 +23,7 @@
 // let start_time = ch(ev.start_hour) + ":" + ch(ev.start_minute);
 // let last_time = ch(ev.last_hour) + ":" + ch(ev.last_minute);
 // console.log(start_time, last_time);
+
+let date = new Date();
+let checkDate =
+  date.getFullYear() + "" + (date.getMonth() + 1) + date.getDate();

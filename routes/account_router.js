@@ -7,17 +7,6 @@ var qs = require("querystring");
 var url = require("url");
 const db = require("../lib/db");
 
-var session = require("express-session");
-var FileStore = require("session-file-store")(session);
-router.use(
-  session({
-    secret: "account info",
-    resave: false,
-    saveUninitialized: true,
-    store: new FileStore(),
-  })
-);
-
 router.get("/join", function (request, response) {
   let html = startTemplate.joinHTML();
   response.send(html);
@@ -31,7 +20,7 @@ router.post("/join_process", function (request, response) {
   let phone = post.phone;
 
   db.query(
-    `INSERT INTO userTBL ()VALUES ('${email}', '${name}', '${pwd}', '${phone}', 'default_profile.png')`,
+    `INSERT INTO userTBL VALUES ('${email}', '${name}', '${pwd}', '${phone}')`,
     function (error, newUser) {
       if (error) {
         console.log(error);
@@ -58,13 +47,6 @@ router.post("/login_process", function (request, response) {
     function (error, checkUser) {
       if (error) {
         console.log(error);
-        let alert = `
-            <script>
-                alert('로그인 실패')
-                location.href="/"
-            </script>
-            `;
-        response.send(alert);
         throw error;
       }
       if (checkUser[0] != undefined) {
@@ -74,6 +56,14 @@ router.post("/login_process", function (request, response) {
           `email : ${request.session.email}, pwd : ${request.session.pwd}`
         );
         response.redirect(`/date`);
+      } else {
+        let alert = `
+            <script>
+                alert('로그인 실패')
+                location.href="/"
+            </script>
+            `;
+        response.send(alert);
       }
     }
   );
@@ -95,9 +85,10 @@ router.get("/mypage", function (request, response) {
         console.log(error);
         throw error;
       }
+
       let html = template.menu(
         "마이페이지",
-        mypageTemplate.mypageHTML(user[0]),
+        template.mypage(user[0]),
         user[0].name
       );
 
@@ -112,10 +103,10 @@ router.post("/mypageUpdate", function (request, response) {
   let email = post.email;
   let pwd = post.pw;
   let phone = post.phone;
-  let profile = "dault_profile.png";
+
   db.query(
     `UPDATE userTBL 
-        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}', profile= '${profile}'
+        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}'
         WHERE email = '${email}'
     `,
     function (error) {
@@ -124,7 +115,7 @@ router.post("/mypageUpdate", function (request, response) {
         let alert = `
             <script>
                 alert('회원정보 수정 실패')
-                location.href="/mypage"
+                location.href="/mypage/${email}"
             </script>
             `;
         response.send(alert);
@@ -133,7 +124,7 @@ router.post("/mypageUpdate", function (request, response) {
       let alert = `
         <script>
             alert('회원정보 수정 완료')
-            location.href="/mypage"
+            location.href="/account/mypage"
         </script>
         `;
       response.send(alert);

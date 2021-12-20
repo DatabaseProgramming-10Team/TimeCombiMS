@@ -4,26 +4,38 @@ const template = require("../lib/template");
 var url = require("url");
 const db = require("../lib/db");
 
+var session = require("express-session");
+var FileStore = require("session-file-store")(session);
+router.use(
+  session({
+    secret: "account info",
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore(),
+  })
+);
+
 router.get("/", function (request, response) {
-  db.query("SELECT * from usertbl", function (error, users) {
-    let html = template.menu(
-      "내 일정",
-      template.date(
-        template.datelist([
-          { color: "color1", dateName: "저녁약속", time: "12:00~13:00" },
-        ])
-      ),
-      "홍길동"
-    );
-    response.send(html);
-  });
+  let email = request.session.email;
+  console.log(email);
+  let date = new Date();
+  let checkDate =
+    date.getFullYear() + "" + (date.getMonth() + 1) + date.getDate();
+  db.query(
+    `SELECT * FROM userTBL WHERE email = '${email}'`,
+    function (error, users) {
+      let html = template.menu(
+        "내 일정",
+        template.date(template.datelist(checkDate)),
+        users[0].name
+      );
+      response.send(html);
+    }
+  );
 });
 
 router.get("/:checkDate", function (request, response) {
   var checkDate = request.params.checkDate;
-  var _url = request.url;
-  var queryData = url.parse(_url, true).query;
-  var pathname = url.parse(_url, true).pathname;
   var list = [];
   db.query(
     `select * from eventtbl WHERE start_date=?`,

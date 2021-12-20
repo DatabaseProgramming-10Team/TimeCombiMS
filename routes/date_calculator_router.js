@@ -49,7 +49,7 @@ router.get("/", function (request, response) {
 
 router.post("/calculator_process", function (request, response) {
   var ev = request.body;
-  console.log(ev);
+  let combi_times = [];
 
   let list = [];
   let sql = "";
@@ -86,9 +86,6 @@ router.post("/calculator_process", function (request, response) {
           `SELECT a.event_no, a.start_date, a.end_date, a.start_time, a.end_time, a.isRepeat, b.re_day FROM eventTBL as a LEFT JOIN repeatEventTBL as b ON a.event_no = b.event_no WHERE (${sql}) and (SUBSTRING_INDEX (a.start_date, '-' ,2) like '${ev.combi_month}' or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}') and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
           function (error, times) {
             console.log(times);
-
-            let combi_times = [];
-
             for (let j = 1; j < 32; j++) {
               for (let k = 0; k < times.length; k++) {
                 let okay = false;
@@ -124,27 +121,29 @@ router.post("/calculator_process", function (request, response) {
     );
   } else {
   }
-  response.render("result", { yn: combi_times });
-  response.writeHead(302, { Location: `/date_calculator/result` });
-  response.end();
-});
-
-router.get("/result", function (request, response) {
-  console.log(request.body);
-  let dd = "2021-12";
-  let yn = [
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,
-    0, 0, 0, 1, 0, 0,
-  ];
+  console.log(combi_times);
   let html = template.menu(
     "계산 결과",
     calculatorTemplate.result(
-      calculatorTemplate.ym(dd),
-      calculatorTemplate.resdate(dd, yn)
+      calculatorTemplate.ym(ev.combi_month),
+      calculatorTemplate.resdate(ev.combi_month, combi_times)
     ),
     "홍길동"
   );
   response.send(html);
+
+  // response.writeHead(302, { Location: `/date_calculator/result` });
+  // response.end();
 });
+
+// router.get("/result", function (request, response) {
+//   console.log(request.body);
+//   let dd = "2021-12";
+//   let yn = [
+//     1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,
+//     0, 0, 0, 1, 0, 0,
+//   ];
+
+// });
 
 module.exports = router;

@@ -29,7 +29,7 @@ app.get("/", function (request, response) {
   }
 });
 
-app.use("/", account_router);
+app.use("/account", account_router);
 
 app.use("/date", date_router);
 app.use("/date_calculator", date_calculator_router);

@@ -26,7 +26,7 @@ router.get("/", function (request, response) {
     function (error, users) {
       let html = template.menu(
         "내 일정",
-        template.date(template.datelist(checkDate)),
+        template.date(template.datelist()),
         users[0].name
       );
       response.send(html);
@@ -43,7 +43,7 @@ router.get("/:checkDate", function (request, response) {
     function (error, dates) {
       let html = template.menu(
         "내 일정",
-        template.date(template.datelist(dates)),
+        template.date(template.datelist(checkDate, dates)),
         "홍길동"
       );
       response.send(html);
@@ -61,7 +61,7 @@ router.get("/:checkDate/schedulelist", function (request, response) {
     `select * from eventtbl WHERE start_date=?`,
     [checkDate],
     function (error, dates) {
-      let html = template.datelist(dates);
+      let html = template.datelist(checkDate, dates);
       response.send(html);
     }
   );

@@ -17,7 +17,6 @@ router.use(
 
 router.get("/", function (request, response) {
   let email = request.session.email;
-  console.log(email);
   let date = new Date();
   let checkDate =
     date.getFullYear() + "" + (date.getMonth() + 1) + date.getDate();
@@ -26,46 +25,114 @@ router.get("/", function (request, response) {
     function (error, users) {
       let html = template.menu(
         "내 일정",
-        template.date(template.datelist()),
+        template.date(template.datelist(checkDate)),
         users[0].name
       );
       response.send(html);
     }
   );
 });
-
 router.get("/:checkDate", function (request, response) {
-  var checkDate = request.params.checkDate;
-  var list = [];
-  db.query(
-    `select * from eventtbl WHERE start_date=?`,
-    [checkDate],
-    function (error, dates) {
-      let html = template.menu(
-        "내 일정",
-        template.date(template.datelist(checkDate, dates)),
-        "홍길동"
-      );
-      response.send(html);
-    }
-  );
-});
-
-router.get("/:checkDate/schedulelist", function (request, response) {
   var checkDate = request.params.checkDate;
   var _url = request.url;
   var queryData = url.parse(_url, true).query;
   var pathname = url.parse(_url, true).pathname;
   var list = [];
   db.query(
-    `select * from eventtbl WHERE start_date=?`,
-    [checkDate],
+    `select * from eventTBL`,
+    //[checkDate],
     function (error, dates) {
-      let html = template.datelist(checkDate, dates);
+      let html = template.menu(
+        "내 일정",
+        template.date(template.datelist(dates)),
+        "홍길동"
+      );
+      console.log("데이터1");
+      console.log(dates);
       response.send(html);
     }
   );
 });
+router.get("/:checkDate/schedulelist", function (request, response) {
+  var checkDate = request.params.checkDate;
+  var list = [];
+  db.query(
+    `SELECT e.event_no, e.event_name, e.start_date, e.end_date, e.start_time, e.end_time, e.isRepeat, e.color, r.re_day FROM eventTBL as e LEFT JOIN repeatEventTBL as r ON e.event_no = r.event_no WHERE (start_date <= '${checkDate}' and end_date >= '${checkDate}') and user_email = '${request.session.email}';`,
+    function (error, dates) {
+      for (let i = 0; i < dates.length; i++) {
+        if (dates[i].isRepeat == 1) {
+          let checkDay = new Date(
+            checkDate.slice(0, 4),
+            parseInt(checkDate.slice(4, 6)) - 1,
+            checkDate.slice(6, 8)
+          ).getDay();
+          let s = dates[i].re_day.split(",");
+          for (let j = 0; j < s.length; j++) {
+            if (s[j] * 1 == checkDay) {
+              list.push(dates[i]);
+            }
+          }
+        } else {
+          list.push(dates[i]);
+        }
+      }
+      let html = template.datelist(list);
+      response.send(html);
+    }
+  );
+});
+
+// router.get("/", function (request, response) {
+//   let email = request.session.email;
+//   console.log(email);
+//   let date = new Date();
+//   let checkDate =
+//     date.getFullYear() + "" + (date.getMonth() + 1) + date.getDate();
+//   db.query(
+//     `SELECT * FROM userTBL WHERE email = '${email}'`,
+//     function (error, users) {
+//       let html = template.menu(
+//         "내 일정",
+//         template.date(template.datelist()),
+//         users[0].name
+//       );
+//       response.send(html);
+//     }
+//   );
+// });
+
+// router.get("/:checkDate", function (request, response) {
+//   var checkDate = request.params.checkDate;
+//   var list = [];
+//   db.query(
+//     `select * from eventtbl WHERE start_date=?`,
+//     [checkDate],
+//     function (error, dates) {
+//       let html = template.menu(
+//         "내 일정",
+//         template.date(template.datelist(checkDate, dates)),
+//         "홍길동"
+//       );
+//       response.send(html);
+//     }
+//   );
+// });
+
+// router.get("/:checkDate/schedulelist", function (request, response) {
+//   var checkDate = request.params.checkDate;
+//   var _url = request.url;
+//   var queryData = url.parse(_url, true).query;
+//   var pathname = url.parse(_url, true).pathname;
+//   var list = [];
+//   db.query(
+//     `select * from eventtbl WHERE start_date=?`,
+//     [checkDate],
+//     function (error, dates) {
+//       let html = template.datelist(checkDate, dates);
+//       response.send(html);
+//     }
+//   );
+// });
 
 router.post("/create_process", function (request, response) {
   var ev = request.body;
@@ -99,7 +166,7 @@ router.post("/create_process", function (request, response) {
   db.query(
     `INSERT INTO eventTBL(user_email, event_name, start_date, end_date, start_time, end_time, isRepeat, color) VALUES(?, ?, ? ,? ,?, ?, ?, ?)`,
     [
-      "minyoung@gmail.com",
+      request.session.email,
       ev.title,
       ev.start_date,
       ev.last_date,

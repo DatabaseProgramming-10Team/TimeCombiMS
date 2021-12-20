@@ -1,0 +1,88 @@
+.box {
+    width: 30%;
+    min-width: 400px;
+    background-color: #ffffff;
+    border: 2px solid #aecefd;
+    border-radius: 10px 10px 10px 10px; 
+    margin: 0 auto 35px;
+    padding-top: 3%;
+}
+
+ .box > input{
+    width: 240px; 
+    height: 30px;  
+    border: 1px solid rgb(219, 218, 218);
+    margin-top: 40px;
+  }
+
+.box > form{
+    text-align: center;
+}
+
+.setting_list{
+    width: 85%;
+    background-color: white;
+    height: 300px;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 0.5rem 15px;
+    overflow: auto;
+    margin-bottom: 10px;
+  }
+  .setting_list ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .setting_list ul li img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+  }
+
+ 
+
+.add{
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .addbtn{
+      width: 30%;
+      height: 10%;
+      padding: 5px 5px;
+      border-radius: 4px;
+      background-color: #aecefd;
+      color:black;
+  
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+  }
+
+  .srhbtn{
+    width: 15%;
+    height: 10%;
+    padding: 5px 5px;
+    border-radius: 4px;
+    background-color: #aecefd;
+    color:black;
+
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
+  .email{
+    border: 2px solid #aecefd; 
+    width: 60%;
+    height: 25px;  
+    border-radius: 5px;
+}

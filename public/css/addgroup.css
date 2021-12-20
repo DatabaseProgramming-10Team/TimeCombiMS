@@ -1,0 +1,85 @@
+.box {
+    width: 40%;
+    min-width: 300px;
+    background-color: #ffffff;
+    border: 2px solid #aecefd;
+    border-radius: 10px 10px 10px 10px; 
+    margin: 0 auto 35px;
+    padding-top: 3%;
+}
+
+ .box > input{
+    width: 240px; 
+    height: 30px;  
+    border: 1px solid rgb(219, 218, 218);
+    margin-top: 40px;
+  }
+
+.form{
+    text-align: center;
+}
+
+.srhbtn{
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    width: 7%;
+    height: 9%;
+    padding: 5px 5px;
+    border-radius: 4px;
+    background-color: #aecefd;
+    color:black;
+  
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+
+  .setting_list{
+    width: 85%;
+    background-color: white;
+    height: 300px;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 0.5rem 15px;
+    overflow: auto;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .setting_list ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .setting_list ul li img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+  }
+
+  
+  .groupfile{
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .groupfile > img {
+    width: 60px;
+    border-radius: 30px;
+    border: 3px solid #aecefd;
+    vertical-align: middle;
+  }
+
+  .groupfile > input{
+    width: 140px; 
+    height: 25px;  
+    border: 1px solid rgb(219, 218, 218); 
+  }
+
+  .groupfile > button{
+    text-align: center;
+  }
+

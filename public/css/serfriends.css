@@ -1,0 +1,100 @@
+.box {
+    width: 35%;
+    height: 20%;
+    min-width: 400px;
+    background-color: #ffffff;
+    border: 2px solid #aecefd;
+    border-radius: 10px 10px 10px 10px; 
+    margin: 0 auto;
+    padding-top: 3%;
+    margin-top: 1%;
+}
+
+ .box > input{
+    width: 240px; 
+    height: 30px;  
+    border: 1px solid rgb(219, 218, 218);
+    margin-top: 40px;
+  }
+
+  .box > form{
+    text-align: center;
+}
+
+.setting_list{
+    width: 85%;
+    background-color: white;
+    height: 300px;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 0.5rem 15px;
+    overflow: auto;
+    margin-bottom: 10px;
+  }
+  .setting_list ul li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .setting_list ul li img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+  }
+
+
+  /*친구관리*/
+  .set{
+    display: inline-block; 
+    margin: 0 3px;
+    align-items: center;
+    justify-content: center;
+  }
+  .set>button{
+    border-radius: 10px 10px 0px 0px; 
+    color: black;
+    padding-top: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-bottom: 10px;
+    background-color: #aecefd;
+  }
+
+  .set2{
+    display: inline-block; 
+    margin: 0 3px;
+    align-items: center;
+    justify-content: center;
+  }
+  .set2>button{
+    border-radius: 10px 10px 0px 0px; 
+    color: black;
+    padding-top: 10px;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-bottom: 10px;
+    background-color: white;
+  }
+
+
+  .addd{
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .sendbtn{
+    width: 15%;
+    height: 8%;
+    padding: 5px 5px;
+    border-radius: 4px;
+    background-color: #aecefd;
+    color:black;
+  
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+  }

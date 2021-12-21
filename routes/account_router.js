@@ -106,7 +106,7 @@ router.post("/mypageUpdate", function (request, response) {
 
   db.query(
     `UPDATE userTBL 
-        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}'
+        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}', profile="default_profile.png"
         WHERE email = '${email}'
     `,
     function (error) {
@@ -115,7 +115,7 @@ router.post("/mypageUpdate", function (request, response) {
         let alert = `
             <script>
                 alert('회원정보 수정 실패')
-                location.href="/mypage"
+                location.href="/account/mypage"
             </script>
             `;
         response.send(alert);

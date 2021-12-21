@@ -375,7 +375,7 @@ router.post("/cancelReq", function(request, response){
     }     
 });
 
-/*
+
 //받은 친구요청 승인(승인버튼1개만 있을때)
 router.post("/confirmReq", function(request, response){
     let email = request.session.email;
@@ -438,10 +438,10 @@ router.post("/confirmReq", function(request, response){
         });
     }   
 })
-*/
+
 
 //받은 친구요청 처리(승인, 거절버튼 모두 있을때)
-router.post("/req_process", function(request, response){
+/*router.post("/req_process", function(request, response){
     let email = request.session.email;
     let f_email = request.body.friend;
     let process = request.body.process;
@@ -535,6 +535,6 @@ router.post("/req_process", function(request, response){
         }
     }    
 })
-
+*/
 
 module.exports = router;

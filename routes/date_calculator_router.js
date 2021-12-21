@@ -4,18 +4,6 @@ const template = require("../lib/template");
 const calculatorTemplate = require("../lib/calculatorTemplate");
 const db = require("../lib/db");
 
-// const mysql = require("mysql");
-// var url = require("url");
-
-// router.get("/", function (request, response) {
-//   let html = template.menu(
-//     "일정 계산기",
-//     calculatorTemplate.calculator(),
-//     "홍길동"
-//   );
-//   response.send(html);
-// });
-
 router.get("/", function (request, response) {
   let email = request.session.email;
   db.query(
@@ -74,7 +62,6 @@ router.post("/calculator_process", function (request, response) {
         }
         sql = sql.slice(0, -4);
 
-        console.log(sql);
         let ch = function (n) {
           return n.length == 1 ? "0" + n : n + "";
         };
@@ -92,19 +79,16 @@ router.post("/calculator_process", function (request, response) {
                                 or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}')
                         and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
           function (error, times) {
-            console.log(times);
 
             for (let j = 1; j < 32; j++) {
               let check = false;
               let okay = false;
               for (let k = 0; k < times.length; k++) {
-                //let okay = false;
                 if (
                   times[k].start_date.toString().slice(8, 10) * 1 <= j &&
                   j <= times[k].end_date.toString().slice(8, 10)
                 ) {
                   okay = true;
-                  //let check = false;
                   if (times[k].isRepeat == 1) {
                     let rep = times[k].re_day.split(",");
                     let day = new Date(
@@ -125,14 +109,11 @@ router.post("/calculator_process", function (request, response) {
               else if (okay == true && check == false) combi_times.push(1);
               else combi_times.push(0);
             }
-
-            //홍길동
             db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
                 if(error){
                     console.log(error); 
                     throw error;
                 }
-                console.log(combi_times);
                 let html = template.menu(
                   "계산 결과",
                   calculatorTemplate.result(
@@ -180,7 +161,6 @@ router.post("/calculator_process", function (request, response) {
                 let check = false;
                 for (let k = 0; k < times.length; k++) {
 
-
             if (
               times[k].start_date.toString().slice(8, 10) * 1 <= j &&
               j <= times[k].end_date.toString().slice(8, 10)
@@ -208,13 +188,11 @@ router.post("/calculator_process", function (request, response) {
               else if (okay == true && check == false) combi_times.push(1);
               else combi_times.push(0);
         }
-        //홍길동
         db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
             if(error){
                 console.log(error); 
                 throw error;
             }
-            console.log(combi_times);
             let html = template.menu(
               "계산 결과",
               calculatorTemplate.result(

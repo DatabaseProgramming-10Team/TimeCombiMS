@@ -51,6 +51,7 @@
     margin: 0 3px;
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
   .set>button{
     border-radius: 10px 10px 0px 0px; 
@@ -67,6 +68,7 @@
     margin: 0 3px;
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
   .set2>button{
     border-radius: 10px 10px 0px 0px; 
@@ -93,6 +95,7 @@
     border-radius: 4px;
     background-color: #aecefd;
     color:black;
+    margin-bottom: 15px;
   
     text-align: center;
     text-decoration: none;

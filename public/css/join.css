@@ -10,7 +10,7 @@ body{
 
 .box {
     width: 35%;
-    max-width: 700px;
+    min-width: 400px;
     background-color: #ffffff;
     border: 2px solid #aecefd;
     border-radius: 10px 10px 10px 10px; 

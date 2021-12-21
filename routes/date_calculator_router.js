@@ -126,16 +126,23 @@ router.post("/calculator_process", function (request, response) {
               else combi_times.push(0);
             }
 
-            console.log(combi_times);
-            let html = template.menu(
-              "계산 결과",
-              calculatorTemplate.result(
-                calculatorTemplate.ym(ev.combi_month),
-                calculatorTemplate.resdate(ev.combi_month, combi_times)
-              ),
-              "홍길동"
-            );
-            response.send(html);
+            //홍길동
+            db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
+                if(error){
+                    console.log(error); 
+                    throw error;
+                }
+                console.log(combi_times);
+                let html = template.menu(
+                  "계산 결과",
+                  calculatorTemplate.result(
+                    calculatorTemplate.ym(ev.combi_month),
+                    calculatorTemplate.resdate(ev.combi_month, combi_times)
+                  ),
+                  user[0].name
+                );
+                response.send(html);
+            });
           }
         );
       }
@@ -205,16 +212,24 @@ router.post("/calculator_process", function (request, response) {
             }
           }
         }
-        console.log(combi_times);
-        let html = template.menu(
-          "계산 결과",
-          calculatorTemplate.result(
-            calculatorTemplate.ym(ev.combi_month),
-            calculatorTemplate.resdate(ev.combi_month, combi_times)
-          ),
-          "홍길동"
-        );
-        response.send(html);
+
+        //홍길동
+        db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
+            if(error){
+                console.log(error); 
+                throw error;
+            }
+            console.log(combi_times);
+            let html = template.menu(
+              "계산 결과",
+              calculatorTemplate.result(
+                calculatorTemplate.ym(ev.combi_month),
+                calculatorTemplate.resdate(ev.combi_month, combi_times)
+              ),
+              user[0].name
+            );
+            response.send(html);
+          });
       }
     );
   }

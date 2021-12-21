@@ -4,7 +4,7 @@ const template = require("../lib/template");
 var url = require("url");
 const db = require("../lib/db");
 
-var session = require("express-session");
+/*var session = require("express-session");
 var FileStore = require("session-file-store")(session);
 router.use(
   session({
@@ -14,6 +14,7 @@ router.use(
     store: new FileStore(),
   })
 );
+*/
 
 router.get("/", function (request, response) {
   let email = request.session.email;

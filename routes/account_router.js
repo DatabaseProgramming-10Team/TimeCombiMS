@@ -20,7 +20,7 @@ router.post("/join_process", function (request, response) {
   let phone = post.phone;
 
   db.query(
-    `INSERT INTO userTBL VALUES ('${email}', '${name}', '${pwd}', '${phone}')`,
+    `INSERT INTO userTBL VALUES ('${email}', '${name}', '${pwd}', '${phone}', 'default_profile.png')`,
     function (error, newUser) {
       if (error) {
         console.log(error);
@@ -106,7 +106,7 @@ router.post("/mypageUpdate", function (request, response) {
 
   db.query(
     `UPDATE userTBL 
-        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}', profile = 'default_profile.png'
+        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}'
         WHERE email = '${email}'
     `,
     function (error) {

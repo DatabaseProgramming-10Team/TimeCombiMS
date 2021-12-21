@@ -106,7 +106,7 @@ router.post("/mypageUpdate", function (request, response) {
 
   db.query(
     `UPDATE userTBL 
-        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}'
+        SET email = '${email}', name = '${name}', pwd = '${pwd}', phone = '${phone}', profile = 'default_profile.png'
         WHERE email = '${email}'
     `,
     function (error) {

@@ -45,21 +45,24 @@ router.get("/:checkDate", function (request, response) {
     //[checkDate],
     function (error, dates) {
       //홍길동
-      db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
-        if(error){
-            console.log(error); 
+      db.query(
+        `SELECT * FROM userTBL WHERE email = '${request.session.email}'`,
+        function (error, user) {
+          if (error) {
+            console.log(error);
             throw error;
-        }
+          }
 
-        let html = template.menu(
+          let html = template.menu(
             "내 일정",
-            template.date(template.datelist(dates)), 
+            template.date(template.datelist(dates)),
             user[0].name
-        );
-        console.log("데이터1");
-        console.log(dates);        
-        response.send(html); 
-      });
+          );
+          console.log("데이터1");
+          console.log(dates);
+          response.send(html);
+        }
+      );
     }
   );
 });
@@ -160,13 +163,13 @@ router.post("/create_process", function (request, response) {
     last_time = ev.last_time;
   }
 
-  if ("월" in ev) repeat += "0,";
-  if ("화" in ev) repeat += "1,";
-  if ("수" in ev) repeat += "2,";
-  if ("목" in ev) repeat += "3,";
-  if ("금" in ev) repeat += "4,";
-  if ("토" in ev) repeat += "5,";
-  if ("일" in ev) repeat += "6,";
+  if ("월" in ev) repeat += "1,";
+  if ("화" in ev) repeat += "2,";
+  if ("수" in ev) repeat += "3,";
+  if ("목" in ev) repeat += "4,";
+  if ("금" in ev) repeat += "5,";
+  if ("토" in ev) repeat += "6,";
+  if ("일" in ev) repeat += "0,";
   repeat = repeat.slice(0, -1);
 
   if (repeat.length != 0) {

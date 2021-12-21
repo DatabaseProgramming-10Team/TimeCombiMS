@@ -88,7 +88,7 @@ router.get("/mypage", function (request, response) {
 
       let html = template.menu(
         "마이페이지",
-        mypageTemplate.mypage(user[0]),
+        mypageTemplate.mypageHTML(user[0]),
         user[0].name
       );
 

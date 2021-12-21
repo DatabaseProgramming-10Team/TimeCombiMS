@@ -346,7 +346,6 @@ router.post("/cancelReq", function(request, response){
                     console.log(error)
                     throw error;
                 }
-                console.log('배열')
             })
         }
         let alert = `
@@ -362,8 +361,6 @@ router.post("/cancelReq", function(request, response){
                 console.log(error); 
                 throw error;
             }
-
-            console.log('스트링')
             let alert = `
             <script>
                 alert('친구요청 취소 완료'); 

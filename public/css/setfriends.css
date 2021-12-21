@@ -102,14 +102,16 @@
     font-size: 14px;
   }
  /* The Close Button */
+.closebox {
+  display: flex;
+  flex-direction: row-reverse;
+}
 .close {
+  display: block;
   color: #aaa;
   font-size: 28px;
   font-weight: bold;
-  float: right;
-  margin-right: 5px;
-  margin-top: -40px;
-
+  padding-right:10px
 }
 .close:hover,
 .close:focus {

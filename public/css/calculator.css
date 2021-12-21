@@ -170,4 +170,7 @@
   font-size: 1rem;
   color: white;
   font-weight: 600;
+  line-height: 35px;
+  vertical-align: middle;
+  margin: 0 auto;
 }

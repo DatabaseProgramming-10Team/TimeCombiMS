@@ -147,14 +147,12 @@ router.post("/calculator_process", function (request, response) {
         );
       }
     );
-  } else {
+  }else {
     let list = [];
 
     list = list.concat(ev.friend);
     list = list.filter((item, pos) => list.indexOf(item) === pos);
     sql = `a.user_email='${request.session.email}' or `;
-    console.log(sql);
-
     for (i of list) {
       sql += `a.user_email='${i}' or `;
     }
@@ -172,24 +170,22 @@ router.post("/calculator_process", function (request, response) {
                 FROM eventTBL as a
                 LEFT JOIN repeatEventTBL as b
                 ON a.event_no = b.event_no
-                WHERE (${sql})
+ WHERE (${sql})
                 and (SUBSTRING_INDEX (a.start_date, '-' ,2) like '${ev.combi_month}'
                   or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}')
                 and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
       function (error, times) {
-        console.log("처음 타임즈 출력:");
-        console.log(times);
-
         for (let j = 1; j < 32; j++) {
-          for (let k = 0; k < times.length; k++) {
-            let okay = false;
-            console.log(times[k].start_date.toString().slice(8, 10));
+                let okay = false;
+                let check = false;
+                for (let k = 0; k < times.length; k++) {
+
+
             if (
               times[k].start_date.toString().slice(8, 10) * 1 <= j &&
               j <= times[k].end_date.toString().slice(8, 10)
             ) {
               okay = true;
-              let check = false;
 
               if (times[k].isRepeat == 1) {
                 let rep = times[k].re_day.split(",");
@@ -198,21 +194,20 @@ router.post("/calculator_process", function (request, response) {
                   ev.combi_month.slice(5, 7),
                   j
                 ).getDay();
-
-                for (item of rep) {
+ for (item of rep) {
                   if (item == day) {
                     check = true;
                     break;
                   }
                 }
               }
-              if (okay == false) combi_times.push(1);
-              else if (okay == true && check == false) combi_times.push(1);
-              else combi_times.push(0);
+
             }
           }
+ if (okay == false) combi_times.push(1);
+              else if (okay == true && check == false) combi_times.push(1);
+              else combi_times.push(0);
         }
-
         //홍길동
         db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
             if(error){

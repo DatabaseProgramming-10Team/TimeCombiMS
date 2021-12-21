@@ -68,13 +68,13 @@ router.post("/calculator_process", function (request, response) {
         }
         list = list.concat(ev.friend);
         list = list.filter((item, pos) => list.indexOf(item) === pos);
-        sql = `a.user_email='${request.session.email}' or `;
+
+        sql = "";
         for (i of list) {
           sql += `a.user_email='${i}' or `;
         }
         sql = sql.slice(0, -4);
 
-        console.log(sql);
         let ch = function (n) {
           return n.length == 1 ? "0" + n : n + "";
         };
@@ -83,28 +83,18 @@ router.post("/calculator_process", function (request, response) {
         let lt = ch(ev.last_hour) + ":" + ch(ev.last_minute) + ":00";
 
         db.query(
-          `SELECT a.event_no, a.start_date, a.end_date, a.start_time, a.end_time, a.isRepeat, b.re_day
-                FROM eventTBL as a
-                LEFT JOIN repeatEventTBL as b
-                ON a.event_no = b.event_no
-                WHERE (${sql})
-                        and (SUBSTRING_INDEX (a.start_date, '-' ,2) like '${ev.combi_month}'
-                                or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}')
-                        and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
+          `SELECT a.event_no, a.start_date, a.end_date, a.start_time, a.end_time, a.isRepeat, b.re_day FROM eventTBL as a LEFT JOIN repeatEventTBL as b ON a.event_no = b.event_no WHERE (${sql}) and (SUBSTRING_INDEX (a.start_date, '-' ,2) like '${ev.combi_month}' or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}') and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
           function (error, times) {
             console.log(times);
-
             for (let j = 1; j < 32; j++) {
-              let check = false;
-              let okay = false;
               for (let k = 0; k < times.length; k++) {
-                //let okay = false;
+                let okay = false;
                 if (
-                  times[k].start_date.toString().slice(8, 10) * 1 <= j &&
-                  j <= times[k].end_date.toString().slice(8, 10)
+                  times[k].start_date.slice(8, 10) * 1 <= j &&
+                  j <= times[k].end_date.slic(8, 10)
                 ) {
                   okay = true;
-                  //let check = false;
+                  let check = false;
                   if (times[k].isRepeat == 1) {
                     let rep = times[k].re_day.split(",");
                     let day = new Date(
@@ -119,105 +109,48 @@ router.post("/calculator_process", function (request, response) {
                       }
                     }
                   }
+                  if (okay == false) combi_times.push(1);
+                  else if (okay == true && check == false) combi_times.push(1);
+                  else combi_times.push(0);
                 }
               }
-              if (okay == false) combi_times.push(1);
-              else if (okay == true && check == false) combi_times.push(1);
-              else combi_times.push(0);
             }
-
-            console.log(combi_times);
-            let html = template.menu(
-              "계산 결과",
-              calculatorTemplate.result(
-                calculatorTemplate.ym(ev.combi_month),
-                calculatorTemplate.resdate(ev.combi_month, combi_times)
-              ),
-              "홍길동"
-            );
-            response.send(html);
           }
         );
       }
     );
   } else {
-    let list = [];
-
-    list = list.concat(ev.friend);
-    list = list.filter((item, pos) => list.indexOf(item) === pos);
-    sql = `a.user_email='${request.session.email}' or `;
-    console.log(sql);
-
-    for (i of list) {
-      sql += `a.user_email='${i}' or `;
-    }
-    sql = sql.slice(0, -4);
-
-    let ch = function (n) {
-      return n.length == 1 ? "0" + n : n + "";
-    };
-
-    let st = ch(ev.start_hour) + ":" + ch(ev.start_minute) + ":00";
-    let lt = ch(ev.last_hour) + ":" + ch(ev.last_minute) + ":00";
-
-    db.query(
-      `SELECT a.event_no, a.start_date, a.end_date, a.start_time, a.end_time, a.isRepeat, b.re_day
-                FROM eventTBL as a
-                LEFT JOIN repeatEventTBL as b
-                ON a.event_no = b.event_no
-                WHERE (${sql})
-                and (SUBSTRING_INDEX (a.start_date, '-' ,2) like '${ev.combi_month}'
-                  or SUBSTRING_INDEX (a.end_date, '-', 2) like '${ev.combi_month}')
-                and ((a.start_time < '${lt}') and (a.end_time > '${st}'));`,
-      function (error, times) {
-        console.log("처음 타임즈 출력:");
-        console.log(times);
-
-        for (let j = 1; j < 32; j++) {
-          for (let k = 0; k < times.length; k++) {
-            let okay = false;
-            console.log(times[k].start_date.toString().slice(8, 10));
-            if (
-              times[k].start_date.toString().slice(8, 10) * 1 <= j &&
-              j <= times[k].end_date.toString().slice(8, 10)
-            ) {
-              okay = true;
-              let check = false;
-
-              if (times[k].isRepeat == 1) {
-                let rep = times[k].re_day.split(",");
-                let day = new Date(
-                  ev.combi_month.slice(0, 4),
-                  ev.combi_month.slice(5, 7),
-                  j
-                ).getDay();
-
-                for (item of rep) {
-                  if (item == day) {
-                    check = true;
-                    break;
-                  }
-                }
-              }
-              if (okay == false) combi_times.push(1);
-              else if (okay == true && check == false) combi_times.push(1);
-              else combi_times.push(0);
-            }
-          }
-        }
-        console.log(combi_times);
-        let html = template.menu(
-          "계산 결과",
-          calculatorTemplate.result(
-            calculatorTemplate.ym(ev.combi_month),
-            calculatorTemplate.resdate(ev.combi_month, combi_times)
-          ),
-          "홍길동"
-        );
-        response.send(html);
-      }
-    );
   }
+
+  db.query(`SELECT * FROM userTBL WHERE email = '${request.session.email}'`, function(error, user){
+    if(error){
+        console.log(error); 
+        throw error;
+    }
+    console.log(combi_times);
+    let html = template.menu(
+      "계산 결과",
+      calculatorTemplate.result(
+        calculatorTemplate.ym(ev.combi_month),
+        calculatorTemplate.resdate(ev.combi_month, combi_times)
+      ),
+      user[0].name
+    );
+    response.send(html);
+
+    // response.writeHead(302, { Location: `/date_calculator/result` });
+    // response.end();
+  });
 });
+
+// router.get("/result", function (request, response) {
+//   console.log(request.body);
+//   let dd = "2021-12";
+//   let yn = [
+//     1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,
+//     0, 0, 0, 1, 0, 0,
+//   ];
+
+// });
 
 module.exports = router;

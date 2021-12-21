@@ -88,7 +88,7 @@ router.get("/mypage", function (request, response) {
 
       let html = template.menu(
         "마이페이지",
-        template.mypage(user[0]),
+        mypageTemplate.mypage(user[0]),
         user[0].name
       );
 
@@ -115,7 +115,7 @@ router.post("/mypageUpdate", function (request, response) {
         let alert = `
             <script>
                 alert('회원정보 수정 실패')
-                location.href="/mypage/${email}"
+                location.href="/mypage"
             </script>
             `;
         response.send(alert);

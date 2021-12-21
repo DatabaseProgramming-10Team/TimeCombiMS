@@ -106,7 +106,7 @@ router.post("/reqFriends", function(request, response){
         `;
         response.send(alert);
     }else{
-        db.query(`SELECT * FROM friendTBL WHERE friend2='${reqReceiver}'`, function(error, isFriend){
+        db.query(`SELECT * FROM friendTBL WHERE friend1 = '${reqSender}' AND friend2='${reqReceiver}'`, function(error, isFriend){
             if(error){
                 console.log(error); 
                 throw error;

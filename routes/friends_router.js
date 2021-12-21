@@ -106,20 +106,19 @@ router.post("/reqFriends", function(request, response){
         `;
         response.send(alert);
     }else{
-        db.query(`SELECT * FROM friendTBL WHERE friend1 = '${reqSender}' AND friend2='${reqReceiver}'`, function(error, isFriend){
+        db.query(`SELECT * FROM friendTBL WHERE (friend1='${reqSender}' AND friend2='${reqReceiver}') OR (friend1='${reqReceiver}' AND friend2='${reqSender}')`, function(error, isFriend){
             if(error){
                 console.log(error); 
                 throw error;
             }
-            if(isFriend == undefined){
-                db.query(`SELECT * FROM addfriendTBL WHERE (friend1 = '${reqSender}' AND friend2='${reqReceiver}') 
-                OR (friend1 = '${reqReceiver}' AND friend2='${reqSender}')`, function(error, isSent){
+            if(isFriend != undefined){
+                db.query(`SELECT * FROM addFriendTBL WHERE (user1 = '${reqSender}' AND user2='${reqReceiver}') OR (user1 = '${reqReceiver}' AND user2='${reqSender}')`, function(error, isSent){
                     if(error){
                         console.log(error); 
                         throw error;
                     }
-                    if(isSent == undefined){
-                        db.query(`INSERT INTO addFriendTBL VALUES('${reqSender}', '${reqReceiver.friend}')`, function(error, ){
+                    if(isSent != undefined){
+                        db.query(`INSERT INTO addFriendTBL VALUES('${reqSender}', '${reqReceiver}')`, function(error, ){
                             if(error){
                                 console.log(error); 
                                 let alert = `
@@ -133,7 +132,7 @@ router.post("/reqFriends", function(request, response){
                                 let alert = `
                                 <script>
                                     alert('친구신청 성공'); 
-                                    location.href="/sentReq"
+                                    location.href="/friends"
                                 </script>
                                 `; 
                                 response.send(alert); 

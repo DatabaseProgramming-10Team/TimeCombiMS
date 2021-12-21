@@ -101,3 +101,19 @@
     text-decoration: none;
     font-size: 14px;
   }
+ /* The Close Button */
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  float: right;
+  margin-right: 5px;
+  margin-top: -40px;
+
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

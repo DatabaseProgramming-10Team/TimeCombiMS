@@ -1,0 +1,59 @@
+CREATE DATABASE timecombiDB;
+USE timecombiDB; 
+
+CREATE TABLE userTBL(
+	email VARCHAR(30) NOT NULL, 
+	name VARCHAR(10) NOT NULL, 
+	pwd VARCHAR(15) NOT NULL, 
+	phone VARCHAR(15) NOT NULL, 
+	profile VARCHAR(50) NOT NULL, 
+	PRIMARY KEY(email)
+); 
+CREATE TABLE groupTBL(
+	g_id INT NOT NULL AUTO_INCREMENT,
+	g_owner VARCHAR(30) NOT NULL, 
+	g_name VARCHAR(30) NOT NULL, 
+	PRIMARY KEY(g_id), 
+	FOREIGN KEY(g_owner) REFERENCES userTBL(email)
+);
+CREATE TABLE addFriendTBL(
+	user1 VARCHAR(30) NOT NULL, 
+	user2 VARCHAR(30) NOT NULL, 
+	PRIMARY KEY(user1, user2),
+	FOREIGN KEY(user1) REFERENCES userTBL(email), 
+	FOREIGN KEY(user2) REFERENCES userTBL(email)
+); 
+CREATE TABLE friendTBL(
+	friend1 VARCHAR(30) NOT NULL, 
+	friend2 VARCHAR(30) NOT NULL, 
+	PRIMARY KEY(friend1, friend2),
+	FOREIGN KEY(friend1) REFERENCES userTBL(email), 
+	FOREIGN KEY(friend2) REFERENCES userTBL(email)
+); 
+CREATE TABLE memberTBL(
+	m_id INT NOT NULL, 
+	m_email VARCHAR(30) NOT NULL, 
+	PRIMARY KEY(m_id, m_email), 
+	FOREIGN KEY(m_id) REFERENCES groupTBL(g_id), 
+	FOREIGN KEY(m_email) REFERENCES userTBL(email)
+); 
+CREATE TABLE eventTBL(
+	event_no INT NOT NULL AUTO_INCREMENT, 
+	user_email VARCHAR(30) NOT NULL, 
+	event_name VARCHAR(20) NOT NULL, 
+	start_date DATE NOT NULL, 
+	end_date DATE NOT NULL, 
+	start_time TIME, 
+	end_time TIME, 
+	isRepeat INT DEFAULT 0, 
+	color VARCHAR(7) DEFAULT '#FFFFFF',
+	PRIMARY KEY(event_no), 
+	FOREIGN KEY(user_email) REFERENCES userTBL(email)
+); 
+CREATE TABLE repeatEventTBL(
+	re_no INT NOT NULL AUTO_INCREMENT, 
+	event_no INT NOT NULL, 
+	re_day VARCHAR(70) NOT NULL, 
+	PRIMARY KEY(re_no), 
+	FOREIGN KEY(event_no) REFERENCES eventTBL(event_no)
+);

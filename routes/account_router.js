@@ -52,9 +52,6 @@ router.post("/login_process", function (request, response) {
       if (checkUser[0] != undefined) {
         request.session.email = email;
         request.session.pwd = pwd;
-        console.log(
-          `email : ${request.session.email}, pwd : ${request.session.pwd}`
-        );
         response.redirect(`/date`);
       } else {
         let alert = `

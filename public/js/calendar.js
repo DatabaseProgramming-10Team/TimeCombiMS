@@ -223,21 +223,3 @@ check.addEventListener("click", (e) => {
     });
   }
 });
-
-//일정 수정
-let popup_update_dateEl = document.querySelector(".update");
-background_blackEl.addEventListener("click", function () {
-  popup_update_dateEl.style.display = "none";
-  background_blackEl.style.display = "none";
-  document.querySelector(".main_menu").checked = false;
-});
-
-document.querySelector(".cancel_update").addEventListener("click", function () {
-  popup_update_dateEl.style.display = "none";
-  background_blackEl.style.display = "none";
-});
-
-document.querySelector(".schedule_edit").addEventListener("click", function () {
-  popup_update_dateEl.style.display = "flex";
-  background_blackEl.style.display = "block";
-});

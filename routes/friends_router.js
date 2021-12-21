@@ -57,6 +57,7 @@ router.get("/", function (request, response) {
     })
 });
 
+//친구 검색
 router.post("/findFriends", function(request, response){
     let email = request.session.email;
     let f_email = request.body.email;
@@ -77,6 +78,7 @@ router.post("/findFriends", function(request, response){
     });         
 });
 
+//친구 추가 버튼
 router.get("/addFriends", function(request, response){
     let email = request.session.email; 
 
@@ -90,31 +92,79 @@ router.get("/addFriends", function(request, response){
     });
 })
 
+//친구 요청
 router.post("/reqFriends", function(request, response){
     let reqSender = request.session.email;
-    let reqReceiver = request.body;
+    let reqReceiver = request.body.friend;
 
-    db.query(`INSERT INTO addFriendTBL VALUES('${reqSender}', '${reqReceiver.friend}')`, function(error, ){
-        if(error){
-            console.log(error); 
-            let alert = `
-            <script>
-                alert('친구신청 실패!'); 
-                location.href="/friends"
-            </script>
-            `; 
-            response.send(alert); 
-        }else{
-            let alert = `
-            <script>
-                alert('친구신청 성공'); 
-                location.href="/friends"
-            </script>
-            `; 
-            response.send(alert); 
-        }
-    })   
+    if(reqReceiver == reqSender){
+        let alert = `
+        <script> 
+            alert('본인에게 친구신청할 수 없습니다');
+            location.href="/friends"
+        </script>
+        `;
+        response.send(alert);
+    }else{
+        db.query(`SELECT * FROM friendTBL WHERE friend2='${reqReceiver}'`, function(error, isFriend){
+            if(error){
+                console.log(error); 
+                throw error;
+            }
+            if(isFriend == undefined){
+                db.query(`SELECT * FROM addfriendTBL WHERE (friend1 = '${reqSender}' AND friend2='${reqReceiver}') 
+                OR (friend1 = '${reqReceiver}' AND friend2='${reqSender}')`, function(error, isSent){
+                    if(error){
+                        console.log(error); 
+                        throw error;
+                    }
+                    if(isSent == undefined){
+                        db.query(`INSERT INTO addFriendTBL VALUES('${reqSender}', '${reqReceiver.friend}')`, function(error, ){
+                            if(error){
+                                console.log(error); 
+                                let alert = `
+                                <script>
+                                    alert('친구신청 실패!'); 
+                                    location.href="/friends"
+                                </script>
+                                `; 
+                                response.send(alert); 
+                            }else{
+                                let alert = `
+                                <script>
+                                    alert('친구신청 성공'); 
+                                    location.href="/sentReq"
+                                </script>
+                                `; 
+                                response.send(alert); 
+                            }
+                        })
+                    }else{
+                        let alert = `
+                        <script>
+                            alert('이미 친구신청을 보냈습니다'); 
+                            location.href="/sentReq"
+                        </script>
+                        `; 
+                        response.send(alert); 
+                    }
+                })               
+            }
+            else{
+                let alert = `
+                <script>
+                    alert('이미 친구입니다'); 
+                    location.href="/friends"
+                </script>
+                `; 
+                response.send(alert);               
+                
+            }
+        })
+    }
 })
+
+//그룹 추가
 router.get("/addGroup", function(request, response){
     let email = request.session.email;
     //let f_email = request.body.email;
@@ -140,6 +190,7 @@ router.get("/addGroup", function(request, response){
     })    
 })
 
+//그룹 추가 프로세스
 router.post("/addGroup_process", function(request, response){
     let g_owner = request.session.email;
     let g_member = request.body.friend;
@@ -203,7 +254,7 @@ router.post("/addGroup_process", function(request, response){
     response.send(alert); 
 })
 
-
+//선택 삭제
 router.post('/delSelected', function(request, response){
     let email = request.session.email;
     let g_id = request.body.group;

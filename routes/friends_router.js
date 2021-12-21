@@ -346,6 +346,7 @@ router.post("/cancelReq", function(request, response){
                     console.log(error)
                     throw error;
                 }
+                console.log('배열')
             })
         }
         let alert = `
@@ -361,6 +362,8 @@ router.post("/cancelReq", function(request, response){
                 console.log(error); 
                 throw error;
             }
+
+            console.log('스트링')
             let alert = `
             <script>
                 alert('친구요청 취소 완료'); 
@@ -372,6 +375,7 @@ router.post("/cancelReq", function(request, response){
     }     
 });
 
+/*
 //받은 친구요청 승인(승인버튼1개만 있을때)
 router.post("/confirmReq", function(request, response){
     let email = request.session.email;
@@ -434,56 +438,103 @@ router.post("/confirmReq", function(request, response){
         });
     }   
 })
+*/
 
 //받은 친구요청 처리(승인, 거절버튼 모두 있을때)
-/*router.post("/req_process", function(request, response){
+router.post("/req_process", function(request, response){
     let email = request.session.email;
     let f_email = request.body.friend;
     let process = request.body.process;
 
-    if(process == '승인'){
-        db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
-            if(error) throw error;
-            for(let i = 0; i < f_email.length; i++){
-                db.query(`SELECT * FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, result){
-                    if(error) throw error;
-    
-                    db.query(`INSERT INTO friendTBL VALUES('${f_email}', '${email}'), ('${email}', '${f_email}')`, function(error, ){
+    if(Array.isArray(f_email)){
+        if(process == '승인'){
+            db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
+                if(error) throw error;
+                for(let i = 0; i < f_email.length; i++){
+                    db.query(`SELECT * FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, result){
                         if(error) throw error;
-    
-                        db.query(`DELETE * FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, ){
+        
+                        db.query(`INSERT INTO friendTBL VALUES('${f_email[i]}', '${email}'), ('${email}', '${f_email[i]}')`, function(error, ){
                             if(error) throw error;
+        
+                            db.query(`DELETE * FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, ){
+                                if(error) throw error;
+                            })
                         })
                     })
-                })
-            }        
-            let alert = `
-            <script>
-                alert('친구요청 승인 완료'); 
-                location.href="/friends/receivedReq"
-            </script>
-            `;
-            response.send(alert);   
-        })
-    }
-    else if(process = '거절'){
-        db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
-            if(error) throw error;
-            for(let i = 0; i < f_email.length; i++){
-                db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, ){
-                    if(error) throw error;
-                })
-            }
-            let alert = `
-            <script>
-                alert('친구요청 거절 완료'); 
-                location.href="/friends/sentReq"
-            </script>
-            `;
-            response.send(alert);
-        })    
-    }
+                }        
+                let alert = `
+                <script>
+                    alert('친구요청 승인 완료'); 
+                    location.href="/friends/receivedReq"
+                </script>
+                `;
+                response.send(alert);   
+            })
+        }
+        else if(process = '거절'){
+            db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
+                if(error) throw error;
+                for(let i = 0; i < f_email.length; i++){
+                    db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, ){
+                        if(error) throw error;
+                    })
+                }
+                let alert = `
+                <script>
+                    alert('친구요청 거절 완료'); 
+                    location.href="/friends/sentReq"
+                </script>
+                `;
+                response.send(alert);
+            })    
+        }
+    }else if(f_email != undefined){
+
+        if(process == '승인'){
+            db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
+                if(error) throw error;
+                
+                    db.query(`SELECT * FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, result){
+                        if(error) throw error;
+        
+                        db.query(`INSERT INTO friendTBL VALUES('${f_email}', '${email}'), ('${email}', '${f_email}')`, function(error, ){
+                            if(error) throw error;
+        
+                            db.query(`DELETE * FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, ){
+                                if(error) throw error;
+                            })
+                        })
+                    })
+                       
+                let alert = `
+                <script>
+                    alert('친구요청 승인 완료'); 
+                    location.href="/friends/receivedReq"
+                </script>
+                `;
+                response.send(alert);   
+            })
+        }
+        else if(process = '거절'){
+            db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
+                if(error) throw error;
+                
+                    db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, ){
+                        if(error) throw error;
+                    })
+            
+                let alert = `
+                <script>
+                    alert('친구요청 거절 완료'); 
+                    location.href="/friends/sentReq"
+                </script>
+                `;
+                response.send(alert);
+            })    
+        }
+    }    
 })
-*/
+
 
 module.exports = router;

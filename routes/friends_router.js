@@ -376,6 +376,7 @@ router.post("/cancelReq", function(request, response){
 });
 
 
+/*
 //받은 친구요청 승인(승인버튼1개만 있을때)
 router.post("/confirmReq", function(request, response){
     let email = request.session.email;
@@ -438,10 +439,11 @@ router.post("/confirmReq", function(request, response){
         });
     }   
 })
+*/
 
 
 //받은 친구요청 처리(승인, 거절버튼 모두 있을때)
-/*router.post("/req_process", function(request, response){
+router.post("/req_process", function(request, response){
     let email = request.session.email;
     let f_email = request.body.friend;
     let process = request.body.process;
@@ -472,7 +474,7 @@ router.post("/confirmReq", function(request, response){
                 response.send(alert);   
             })
         }
-        else if(process = '거절'){
+        else if(process == '거절'){
             db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
                 if(error) throw error;
                 for(let i = 0; i < f_email.length; i++){
@@ -501,7 +503,7 @@ router.post("/confirmReq", function(request, response){
                         db.query(`INSERT INTO friendTBL VALUES('${f_email}', '${email}'), ('${email}', '${f_email}')`, function(error, ){
                             if(error) throw error;
         
-                            db.query(`DELETE * FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, ){
+                            db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, ){
                                 if(error) throw error;
                             })
                         })
@@ -520,7 +522,7 @@ router.post("/confirmReq", function(request, response){
             db.query(`SELECT * FROM userTBL WHERE email='${email}'`, function(error, user){
                 if(error) throw error;
                 
-                    db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email[i]}' AND user2='${email}'`, function(error, ){
+                    db.query(`DELETE FROM addFriendTBL WHERE user1='${f_email}' AND user2='${email}'`, function(error, ){
                         if(error) throw error;
                     })
             
@@ -535,6 +537,6 @@ router.post("/confirmReq", function(request, response){
         }
     }    
 })
-*/
+
 
 module.exports = router;
